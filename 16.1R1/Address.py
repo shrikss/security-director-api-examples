@@ -1,13 +1,11 @@
 import json
 import Utils
+import space_details
 
-sd_session = None;
-sd_root_url = "https://10.206.47.58/"
-sd_username = "super"
-sd_password = "123juniper"
+sd_session = None
 
 def create_address(address):
-    address_url_path = sd_root_url + "/api/juniper/sd/address-management/addresses"
+    address_url_path = space_details.sd_root_url + "/api/juniper/sd/address-management/addresses"
     header = {'Content-Type': 'application/vnd.juniper.sd.address-management.address+json;version=1;charset=UTF-8',
               'Accept': 'application/vnd.juniper.sd.address-management.address+json;version=1;q=0.01'}
 
@@ -27,8 +25,7 @@ def create_address(address):
         print "Address Object [Type - " + (address['address-type']) + " ] created successfully\n",
 
 def delete_address(id):
-    global sd_root_url
-    delete_path = sd_root_url + "/api/juniper/sd/address-management/addresses/delete"
+    delete_path = space_details.sd_root_url + "/api/juniper/sd/address-management/addresses/delete"
     header = {'Content-Type': 'application/vnd.juniper.sd.bulk-delete+json;version=1;charset=UTF-8'}
     list_id = list()
     list_id.append(id)
@@ -43,7 +40,7 @@ def delete_address(id):
         print "Address Object [Id: " + str(id) + "] deleted successfully"
 
 def get_address_id(name):
-    path = sd_root_url + "/api/juniper/sd/address-management/addresses?rows=500&include-dynamic-addresses=false"
+    path = space_details.sd_root_url + "/api/juniper/sd/address-management/addresses?rows=500&include-dynamic-addresses=false"
     header = {'Accept': 'application/vnd.juniper.sd.address-management.address-refs+json;version=1;q=0.01'}
     response = sd_session.get(url=path, headers=header, verify=False)
     if response.status_code != 200:
@@ -59,7 +56,7 @@ def get_address_id(name):
     return address_id
 
 def get_address_object(id):
-    get_path = sd_root_url + "/api/juniper/sd/address-management/addresses/%s" % (id)
+    get_path = space_details.sd_root_url + "/api/juniper/sd/address-management/addresses/%s" % (id)
     get_header = {'Accept': 'application/vnd.juniper.sd.address-management.address+json;version=1;q=0.01'}
     response = sd_session.get(url=get_path, headers=get_header, verify=False)
     if response.status_code != 200:
@@ -71,7 +68,7 @@ def get_address_object(id):
     return address_object
 
 def modify_address(address, id):
-    modify_path = sd_root_url + "/api/juniper/sd/address-management/addresses/%s" % (id)
+    modify_path = space_details.sd_root_url + "/api/juniper/sd/address-management/addresses/%s" % (id)
     modify_header = {
         'Content-Type': 'application/vnd.juniper.sd.address-management.address+json;version=1;charset=UTF-8',
         'Accept': 'application/vnd.juniper.sd.address-management.address+json;version=1;q=0.01'}
@@ -87,7 +84,7 @@ if __name__ == "__main__":
 
     # Login to space
     try:
-        sd_session = Utils.login(sd_root_url, sd_username, sd_password)
+        sd_session = Utils.login(space_details.sd_root_url, space_details.sd_username, space_details.sd_password)
         print "Able to login successfully"
     except Exception as exp:
         print "Error in login to space"
@@ -175,7 +172,7 @@ if __name__ == "__main__":
     delete_address(address_id_dns)
 
     # Logout from Space.
-    Utils.logout(sd_root_url, sd_session)
+    Utils.logout(space_details.sd_root_url, sd_session)
 
 
 
